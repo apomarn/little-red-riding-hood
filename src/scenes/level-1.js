@@ -1,5 +1,5 @@
 import Enemies from "../enemies";
-import { getAsset } from "./utils";
+import { getAsset } from "../utils";
 
 class Level1 extends Phaser.Scene {
   constructor() {

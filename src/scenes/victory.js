@@ -1,4 +1,4 @@
-import { getAsset } from "./utils";
+import { getAsset } from "../utils";
 
 class Victory extends Phaser.Scene {
   constructor() {
