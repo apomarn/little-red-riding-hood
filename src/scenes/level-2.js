@@ -1,8 +1,8 @@
 import Enemies from "../enemies";
 
-class Game extends Phaser.Scene {
+class Level2 extends Phaser.Scene {
   constructor() {
-    super({ key: "Game2" });
+    super({ key: "Level2" });
 
     this.player;
     this.cursors;
@@ -14,11 +14,11 @@ class Game extends Phaser.Scene {
     this.load.image("house", "../../assets/finalhouse.png");
     this.load.tilemapTiledJSON("map2", "../../assets/level-2.json");
     this.load.image("background", "../../assets/water.png");
-    this.load.spritesheet("player2", "../../assets/babyKylie.png", {
+    this.load.spritesheet("player2", "../../assets/kylie.png", {
       frameWidth: 35,
       frameHeight: 35
     });
-    this.load.image("wolf", "../../assets/myWolfs.png");
+    this.load.image("wolf", "../../assets/wolfs.png");
   }
 
   create() {
@@ -44,19 +44,12 @@ class Game extends Phaser.Scene {
     worldLayer.setCollisionByProperty({ collides: true });
     highLayer.setDepth(10);
 
-    let spawnPoint = map.findObject(
-      "player",
-      obj => obj.name === "Spawn Point"
-    );
+    let spawnPoint = map.findObject("player", obj => obj.name === "Spawn Point");
 
     console.log(spawnPoint);
 
     // console.log("spawn point --- asbaji ", spawnPoint);
-    this.player = this.physics.add.sprite(
-      spawnPoint.x,
-      spawnPoint.y,
-      "player2"
-    );
+    this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, "player2");
 
     // collides with what I set up for
     this.physics.add.collider(this.player, lowerLayer);
@@ -71,13 +64,7 @@ class Game extends Phaser.Scene {
     this.physics.add.collider(this.enemiesGroup, groundLayer);
     this.physics.add.collider(this.enemiesGroup, worldLayer);
 
-    this.physics.add.collider(
-      this.enemiesGroup,
-      this.player,
-      this.hitEnemy,
-      null,
-      this
-    );
+    this.physics.add.collider(this.enemiesGroup, this.player, this.hitEnemy, null, this);
 
     const anims = this.anims;
     anims.create({
@@ -159,11 +146,8 @@ class Game extends Phaser.Scene {
   }
 
   victory() {
-    //this.scene.remove("Game");
-    // this.scene.stop("Game");
-    // this.scene.stop("Game");
     this.scene.start("Victory");
   }
 }
 
-export default Game;
+export default Level2;

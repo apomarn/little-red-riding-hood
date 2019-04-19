@@ -1,8 +1,9 @@
 import Enemies from "../enemies";
+import { getAsset } from "./utils";
 
-class Game extends Phaser.Scene {
+class Level1 extends Phaser.Scene {
   constructor() {
-    super({ key: "Game" });
+    super({ key: "Level1" });
 
     this.player;
     this.cursors;
@@ -10,15 +11,15 @@ class Game extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("tiles", "../../assets/assets.png");
-    this.load.image("house", "../../assets/finalhouse.png");
-    this.load.tilemapTiledJSON("map", "../../assets/level-1.json");
-    this.load.image("background", "../../assets/water.png");
-    this.load.spritesheet("player", "../../assets/maybe.png", {
-      frameWidth: 40,
-      frameHeight: 50
+    this.load.image("tiles", getAsset("tiles.png"));
+    this.load.image("house", getAsset("house.png"));
+    this.load.tilemapTiledJSON("map", getAsset("level-1.json"));
+    this.load.image("background", getAsset("water.png"));
+    this.load.spritesheet("player", getAsset("jasmin.png"), {
+      frameWidth: 48,
+      frameHeight: 48
     });
-    this.load.image("wolf", "../../assets/myWolfs.png");
+    this.load.image("wolf", getAsset("wolfs.png"));
   }
 
   create() {
@@ -26,7 +27,7 @@ class Game extends Phaser.Scene {
     const tileset = map.addTilesetImage("assets", "tiles");
 
     this.add.image(600, 300, "background");
-    const house = this.physics.add.image(270, 90, "house");
+    const house = this.physics.add.image(1310, 90, "house");
     house.body.static = true;
     house.setDepth(10);
 
@@ -42,10 +43,7 @@ class Game extends Phaser.Scene {
     worldLayer.setCollisionByProperty({ collides: true });
     highLayer.setDepth(10);
 
-    let spawnPoint = map.findObject(
-      "Player",
-      obj => obj.name === "Spawn Point"
-    );
+    let spawnPoint = map.findObject("Player", obj => obj.name === "Spawn Point");
 
     // console.log("spawn point --- asbaji ", spawnPoint);
     this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, "player");
@@ -63,53 +61,37 @@ class Game extends Phaser.Scene {
     this.physics.add.collider(this.enemiesGroup, groundLayer);
     this.physics.add.collider(this.enemiesGroup, worldLayer);
 
-    this.physics.add.collider(
-      this.enemiesGroup,
-      this.player,
-      this.hitEnemy,
-      null,
-      this
-    );
+    this.physics.add.collider(this.enemiesGroup, this.player, this.hitEnemy, null, this);
 
-    const anims = this.anims;
-    anims.create({
+    this.anims.create({
       key: "left",
-      frames: anims.generateFrameNames("player", { start: 3, end: 3 }),
+      frames: this.anims.generateFrameNames("player", { start: 3, end: 5 }),
       frameRate: 10,
       repeat: -1
     });
-    anims.create({
+    this.anims.create({
       key: "right",
-      frames: anims.generateFrameNames("player", { start: 6, end: 6 }),
+      frames: this.anims.generateFrameNames("player", { start: 6, end: 8 }),
       frameRate: 10,
       repeat: -1
     });
-    anims.create({
+    this.anims.create({
       key: "front",
-      frames: anims.generateFrameNames("player", { start: 0, end: 0 }),
+      frames: this.anims.generateFrameNames("player", { start: 0, end: 2 }),
       frameRate: 10,
       repeat: -1
     });
-    anims.create({
+    this.anims.create({
       key: "back",
-      frames: anims.generateFrameNames("player", { start: 0, end: 0 }),
+      frames: this.anims.generateFrameNames("player", { start: 9, end: 11 }),
       frameRate: 10,
       repeat: -1
     });
-
-    //setting the camera to follow player
 
     const camera = this.cameras.main;
     camera.startFollow(this.player);
     camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
-    /* colliding with */
-    // const debug = this.add.graphics().setAlpha(0.75);
-    // worldLayer.renderDebug(debug, {
-    //   tileColor: null,
-    //   collidingTileColor: new Phaser.Display.Color(180, 50, 250, 255),
-    //   faceColor: new Phaser.Display.Color(40, 39, 37, 255)
-    // });
     this.cursors = this.input.keyboard.createCursorKeys();
   }
 
@@ -120,29 +102,18 @@ class Game extends Phaser.Scene {
 
     if (this.cursors.left.isDown) {
       this.player.body.setVelocityX(-250);
-    } else if (this.cursors.right.isDown) {
-      this.player.body.setVelocityX(250);
-    } else if (this.cursors.up.isDown) {
-      this.player.body.setVelocityY(-250);
-    } else if (this.cursors.down.isDown) {
-      this.player.body.setVelocityY(250);
-    }
-
-    if (this.cursors.left.isDown) {
       this.player.anims.play("left", true);
     } else if (this.cursors.right.isDown) {
+      this.player.body.setVelocityX(250);
       this.player.anims.play("right", true);
     } else if (this.cursors.up.isDown) {
+      this.player.body.setVelocityY(-250);
       this.player.anims.play("back", true);
     } else if (this.cursors.down.isDown) {
+      this.player.body.setVelocityY(250);
       this.player.anims.play("front", true);
     } else {
       this.player.anims.stop();
-
-      if (prevVelocity.x < 0) this.player.setTexture("player", "left");
-      else if (prevVelocity.x > 0) this.player.setTexture("player", "right");
-      else if (prevVelocity.y < 0) this.player.setTexture("player", "back");
-      else if (prevVelocity.y > 0) this.player.setTexture("player", "front");
     }
   }
 
@@ -151,11 +122,9 @@ class Game extends Phaser.Scene {
   }
 
   victory() {
-    //this.scene.remove("Game");
-    // this.scene.stop("Game");
-    this.scene.stop("Game");
+    this.scene.stop("Level1");
     this.scene.start("Victory");
   }
 }
 
-export default Game;
+export default Level1;

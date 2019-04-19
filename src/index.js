@@ -2,8 +2,8 @@ import "phaser";
 
 import TheEnd from "./scenes/the-end";
 import Victory from "./scenes/victory";
-import Game from "./scenes/level-1";
-import Game2 from "./scenes/level-2";
+import Level1 from "./scenes/level-1";
+import Level2 from "./scenes/level-2";
 import LandingScene from "./scenes/landing";
 
 const config = {
@@ -17,7 +17,7 @@ const config = {
       gravity: { y: 0 }
     }
   },
-  scene: [LandingScene, Game, Game2, Victory, TheEnd]
+  scene: [LandingScene, Level1, Level2, Victory, TheEnd]
 };
 
 const game = new Phaser.Game(config);
