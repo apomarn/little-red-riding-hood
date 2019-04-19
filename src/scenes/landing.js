@@ -4,8 +4,8 @@ class LandingScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("landing", "../assets/landingScene.png");
-    this.load.image("play", "../assets/playButton.png");
+    this.load.image("landing", "../../assets/landingScene.png");
+    this.load.image("play", "../../assets/playButton.png");
   }
 
   create() {

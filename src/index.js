@@ -1,10 +1,10 @@
 import "phaser";
 
-import TheEnd from "../assets/scenes/TheEnd.js";
-import Victory from "../assets/scenes/Victory.js";
-import Game from "../assets/scenes/game";
-import Game2 from "../assets/scenes/game2.js";
-import LandingScene from "../assets/scenes/LandingScene.js";
+import TheEnd from "./scenes/the-end";
+import Victory from "./scenes/victory";
+import Game from "./scenes/level-1";
+import Game2 from "./scenes/level-2";
+import LandingScene from "./scenes/landing";
 
 const config = {
   type: Phaser.AUTO,

@@ -5,8 +5,8 @@ class Victory extends Phaser.Scene {
 
   preload() {
     console.log(this);
-    this.load.image("victory", "../assets/victory.png");
-    this.load.image("kylieButton", "../assets/helpKylie.png");
+    this.load.image("victory", "../../assets/victory.png");
+    this.load.image("kylieButton", "../../assets/helpKylie.png");
   }
 
   create() {

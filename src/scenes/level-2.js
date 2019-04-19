@@ -1,8 +1,8 @@
-import Enemies from "../scenes/Enemies";
+import Enemies from "../enemies";
 
 class Game extends Phaser.Scene {
   constructor() {
-    super({ key: "Game" });
+    super({ key: "Game2" });
 
     this.player;
     this.cursors;
@@ -10,23 +10,25 @@ class Game extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("tiles", "../assets/assets.png");
-    this.load.image("house", "../assets/finalhouse.png");
-    this.load.tilemapTiledJSON("map", "../assets/game1.json");
-    this.load.image("background", "../assets/water.png");
-    this.load.spritesheet("player", "../assets/maybe.png", {
-      frameWidth: 40,
-      frameHeight: 50
+    this.load.image("tiles", "../../assets/assets.png");
+    this.load.image("house", "../../assets/finalhouse.png");
+    this.load.tilemapTiledJSON("map2", "../../assets/level-2.json");
+    this.load.image("background", "../../assets/water.png");
+    this.load.spritesheet("player2", "../../assets/babyKylie.png", {
+      frameWidth: 35,
+      frameHeight: 35
     });
-    this.load.image("wolf", "../assets/myWolfs.png");
+    this.load.image("wolf", "../../assets/myWolfs.png");
   }
 
   create() {
-    const map = this.make.tilemap({ key: "map" });
+    this.scene.stop("Victory");
+
+    const map = this.make.tilemap({ key: "map2" });
     const tileset = map.addTilesetImage("assets", "tiles");
 
     this.add.image(600, 300, "background");
-    const house = this.physics.add.image(1330, 90, "house");
+    const house = this.physics.add.image(1330, 65, "house");
     house.body.static = true;
     house.setDepth(10);
 
@@ -43,12 +45,18 @@ class Game extends Phaser.Scene {
     highLayer.setDepth(10);
 
     let spawnPoint = map.findObject(
-      "Player",
+      "player",
       obj => obj.name === "Spawn Point"
     );
 
+    console.log(spawnPoint);
+
     // console.log("spawn point --- asbaji ", spawnPoint);
-    this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, "player");
+    this.player = this.physics.add.sprite(
+      spawnPoint.x,
+      spawnPoint.y,
+      "player2"
+    );
 
     // collides with what I set up for
     this.physics.add.collider(this.player, lowerLayer);
@@ -73,26 +81,26 @@ class Game extends Phaser.Scene {
 
     const anims = this.anims;
     anims.create({
-      key: "left",
-      frames: anims.generateFrameNames("player", { start: 3, end: 3 }),
+      key: "left2",
+      frames: anims.generateFrameNames("player2", { start: 3, end: 3 }),
       frameRate: 10,
       repeat: -1
     });
     anims.create({
-      key: "right",
-      frames: anims.generateFrameNames("player", { start: 6, end: 6 }),
+      key: "right2",
+      frames: anims.generateFrameNames("player2", { start: 6, end: 6 }),
       frameRate: 10,
       repeat: -1
     });
     anims.create({
-      key: "front",
-      frames: anims.generateFrameNames("player", { start: 0, end: 0 }),
+      key: "front2",
+      frames: anims.generateFrameNames("player2", { start: 0, end: 0 }),
       frameRate: 10,
       repeat: -1
     });
     anims.create({
-      key: "back",
-      frames: anims.generateFrameNames("player", { start: 0, end: 0 }),
+      key: "back2",
+      frames: anims.generateFrameNames("player2", { start: 9, end: 9 }),
       frameRate: 10,
       repeat: -1
     });
@@ -129,20 +137,20 @@ class Game extends Phaser.Scene {
     }
 
     if (this.cursors.left.isDown) {
-      this.player.anims.play("left", true);
+      this.player.anims.play("left2", true);
     } else if (this.cursors.right.isDown) {
-      this.player.anims.play("right", true);
+      this.player.anims.play("right2", true);
     } else if (this.cursors.up.isDown) {
-      this.player.anims.play("back", true);
+      this.player.anims.play("back2", true);
     } else if (this.cursors.down.isDown) {
-      this.player.anims.play("front", true);
+      this.player.anims.play("front2", true);
     } else {
       this.player.anims.stop();
 
-      if (prevVelocity.x < 0) this.player.setTexture("player", "left");
-      else if (prevVelocity.x > 0) this.player.setTexture("player", "right");
-      else if (prevVelocity.y < 0) this.player.setTexture("player", "back");
-      else if (prevVelocity.y > 0) this.player.setTexture("player", "front");
+      if (prevVelocity.x < 0) this.player.setTexture("player2", "left2");
+      else if (prevVelocity.x > 0) this.player.setTexture("player2", "right2");
+      else if (prevVelocity.y < 0) this.player.setTexture("player2", "back2");
+      else if (prevVelocity.y > 0) this.player.setTexture("player2", "front2");
     }
   }
 
@@ -153,7 +161,7 @@ class Game extends Phaser.Scene {
   victory() {
     //this.scene.remove("Game");
     // this.scene.stop("Game");
-    this.scene.stop("Game");
+    // this.scene.stop("Game");
     this.scene.start("Victory");
   }
 }
