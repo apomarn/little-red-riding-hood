@@ -27,7 +27,7 @@ class Level1 extends Phaser.Scene {
     const tileset = map.addTilesetImage("assets", "tiles");
 
     this.add.image(600, 300, "background");
-    const house = this.physics.add.image(100, 90, "house");
+    const house = this.physics.add.image(1310, 90, "house");
     house.body.static = true;
     house.setDepth(10);
 
