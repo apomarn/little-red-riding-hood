@@ -26,7 +26,7 @@ class Game extends Phaser.Scene {
     const tileset = map.addTilesetImage("assets", "tiles");
 
     this.add.image(600, 300, "background");
-    const house = this.physics.add.image(1330, 90, "house");
+    const house = this.physics.add.image(270, 90, "house");
     house.body.static = true;
     house.setDepth(10);
 
