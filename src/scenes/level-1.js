@@ -13,9 +13,9 @@ class Level1 extends Phaser.Scene {
   preload() {
     this.load.image("tiles", getAsset("tiles.png"));
     this.load.image("house", getAsset("house.png"));
-    this.load.tilemapTiledJSON("map", getAsset("level-1.json"));
+    this.load.tilemapTiledJSON("level-1", getAsset("level-1.json"));
     this.load.image("background", getAsset("water.png"));
-    this.load.spritesheet("player", getAsset("jasmin.png"), {
+    this.load.spritesheet("jasmin", getAsset("jasmin.png"), {
       frameWidth: 48,
       frameHeight: 48
     });
@@ -23,32 +23,28 @@ class Level1 extends Phaser.Scene {
   }
 
   create() {
-    const map = this.make.tilemap({ key: "map" });
+    const map = this.make.tilemap({ key: "level-1" });
     const tileset = map.addTilesetImage("assets", "tiles");
 
     this.add.image(600, 300, "background");
-    const house = this.physics.add.image(1310, 90, "house");
+    const house = this.physics.add.image(100, 90, "house");
     house.body.static = true;
     house.setDepth(10);
 
     const lowerLayer = map.createStaticLayer("LowerGround", tileset, 0, 0);
     const groundLayer = map.createStaticLayer("Ground", tileset, 0, 0);
-    const grassLayer = map.createStaticLayer("Grass", tileset, 0, 0);
     const worldLayer = map.createStaticLayer("World", tileset, 0, 0);
     const highLayer = map.createStaticLayer("High", tileset, 0, 0);
 
-    //activating the collisions
     lowerLayer.setCollisionByProperty({ collides: true });
     groundLayer.setCollisionByProperty({ collides: true });
     worldLayer.setCollisionByProperty({ collides: true });
     highLayer.setDepth(10);
 
-    let spawnPoint = map.findObject("Player", obj => obj.name === "Spawn Point");
+    const spawnPoint = map.findObject("player", obj => obj.name === "Spawn Point");
 
-    // console.log("spawn point --- asbaji ", spawnPoint);
-    this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, "player");
+    this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, "jasmin");
 
-    // collides with what I set up for
     this.physics.add.collider(this.player, lowerLayer);
     this.physics.add.collider(this.player, groundLayer);
     this.physics.add.collider(this.player, worldLayer);
@@ -64,26 +60,26 @@ class Level1 extends Phaser.Scene {
     this.physics.add.collider(this.enemiesGroup, this.player, this.hitEnemy, null, this);
 
     this.anims.create({
-      key: "left",
-      frames: this.anims.generateFrameNames("player", { start: 3, end: 5 }),
+      key: "jasmin-left",
+      frames: this.anims.generateFrameNames("jasmin", { start: 3, end: 5 }),
       frameRate: 10,
       repeat: -1
     });
     this.anims.create({
-      key: "right",
-      frames: this.anims.generateFrameNames("player", { start: 6, end: 8 }),
+      key: "jasmin-right",
+      frames: this.anims.generateFrameNames("jasmin", { start: 6, end: 8 }),
       frameRate: 10,
       repeat: -1
     });
     this.anims.create({
-      key: "front",
-      frames: this.anims.generateFrameNames("player", { start: 0, end: 2 }),
+      key: "jasmin-front",
+      frames: this.anims.generateFrameNames("jasmin", { start: 0, end: 2 }),
       frameRate: 10,
       repeat: -1
     });
     this.anims.create({
-      key: "back",
-      frames: this.anims.generateFrameNames("player", { start: 9, end: 11 }),
+      key: "jasmin-back",
+      frames: this.anims.generateFrameNames("jasmin", { start: 9, end: 11 }),
       frameRate: 10,
       repeat: -1
     });
@@ -96,28 +92,26 @@ class Level1 extends Phaser.Scene {
   }
 
   update() {
-    const prevVelocity = this.player.body.velocity.clone();
-
     this.player.body.setVelocity(0);
 
     if (this.cursors.left.isDown) {
       this.player.body.setVelocityX(-250);
-      this.player.anims.play("left", true);
+      this.player.anims.play("jasmin-left", true);
     } else if (this.cursors.right.isDown) {
       this.player.body.setVelocityX(250);
-      this.player.anims.play("right", true);
+      this.player.anims.play("jasmin-right", true);
     } else if (this.cursors.up.isDown) {
       this.player.body.setVelocityY(-250);
-      this.player.anims.play("back", true);
+      this.player.anims.play("jasmin-back", true);
     } else if (this.cursors.down.isDown) {
       this.player.body.setVelocityY(250);
-      this.player.anims.play("front", true);
+      this.player.anims.play("jasmin-front", true);
     } else {
       this.player.anims.stop();
     }
   }
 
-  hitEnemy(player, enemiesGroup) {
+  hitEnemy() {
     this.scene.restart();
   }
 

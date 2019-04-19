@@ -7,22 +7,17 @@ class Victory extends Phaser.Scene {
 
   preload() {
     this.load.image("victory", getAsset("victory.png"));
-    this.load.image("kylieButton", getAsset("helpKylie.png"));
+    this.load.image("help", getAsset("help.png"));
   }
 
   create() {
-    this.scene.stop("Level1");
-
     this.add.sprite(400, 300, "victory");
 
-    const kylieButton = this.add.sprite(700, 70, "kylieButton");
-    kylieButton.setInteractive();
-    kylieButton.on("pointerdown", () => {
+    const helpButton = this.add.sprite(700, 70, "help");
+    helpButton.setInteractive();
+    helpButton.on("pointerdown", () => {
       this.scene.start("Level2");
     });
-  }
-  victory() {
-    this.scene.start("Level2");
   }
 }
 

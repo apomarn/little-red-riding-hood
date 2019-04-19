@@ -10,7 +10,11 @@ class TheEnd extends Phaser.Scene {
   }
 
   create() {
-    this.add.sprite(400, 300, "end");
+    const endButton = this.add.sprite(400, 300, "end");
+    endButton.setInteractive();
+    endButton.on("pointerdown", () => {
+      this.scene.start("Landing");
+    });
   }
 }
 

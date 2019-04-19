@@ -8,7 +8,7 @@ import LandingScene from "./scenes/landing";
 
 const config = {
   type: Phaser.AUTO,
-  parent: "phaser-example",
+  parent: "little-red-riding-hood",
   width: 800,
   height: 600,
   physics: {

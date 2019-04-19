@@ -1,4 +1,5 @@
 import Enemies from "../enemies";
+import { getAsset } from "./utils";
 
 class Level2 extends Phaser.Scene {
   constructor() {
@@ -10,48 +11,40 @@ class Level2 extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("tiles", "../../assets/assets.png");
-    this.load.image("house", "../../assets/finalhouse.png");
-    this.load.tilemapTiledJSON("map2", "../../assets/level-2.json");
-    this.load.image("background", "../../assets/water.png");
-    this.load.spritesheet("player2", "../../assets/kylie.png", {
-      frameWidth: 35,
-      frameHeight: 35
+    this.load.image("tiles", getAsset("tiles.png"));
+    this.load.image("house", getAsset("house.png"));
+    this.load.tilemapTiledJSON("level-2", getAsset("level-2.json"));
+    this.load.image("background", getAsset("water.png"));
+    this.load.spritesheet("kylie", getAsset("kylie.png"), {
+      frameWidth: 36,
+      frameHeight: 36
     });
-    this.load.image("wolf", "../../assets/wolfs.png");
+    this.load.image("wolf", getAsset("wolfs.png"));
   }
 
   create() {
-    this.scene.stop("Victory");
-
-    const map = this.make.tilemap({ key: "map2" });
+    const map = this.make.tilemap({ key: "level-2" });
     const tileset = map.addTilesetImage("assets", "tiles");
 
     this.add.image(600, 300, "background");
-    const house = this.physics.add.image(1330, 65, "house");
+    const house = this.physics.add.image(100, 65, "house");
     house.body.static = true;
     house.setDepth(10);
 
     const lowerLayer = map.createStaticLayer("LowerGround", tileset, 0, 0);
     const groundLayer = map.createStaticLayer("Ground", tileset, 0, 0);
-    const grassLayer = map.createStaticLayer("Grass", tileset, 0, 0);
     const worldLayer = map.createStaticLayer("World", tileset, 0, 0);
     const highLayer = map.createStaticLayer("High", tileset, 0, 0);
 
-    //activating the collisions
     lowerLayer.setCollisionByProperty({ collides: true });
     groundLayer.setCollisionByProperty({ collides: true });
     worldLayer.setCollisionByProperty({ collides: true });
     highLayer.setDepth(10);
 
-    let spawnPoint = map.findObject("player", obj => obj.name === "Spawn Point");
+    const spawnPoint = map.findObject("player", obj => obj.name === "Spawn Point");
 
-    console.log(spawnPoint);
+    this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, "kylie");
 
-    // console.log("spawn point --- asbaji ", spawnPoint);
-    this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, "player2");
-
-    // collides with what I set up for
     this.physics.add.collider(this.player, lowerLayer);
     this.physics.add.collider(this.player, groundLayer);
     this.physics.add.collider(this.player, worldLayer);
@@ -66,87 +59,65 @@ class Level2 extends Phaser.Scene {
 
     this.physics.add.collider(this.enemiesGroup, this.player, this.hitEnemy, null, this);
 
-    const anims = this.anims;
-    anims.create({
-      key: "left2",
-      frames: anims.generateFrameNames("player2", { start: 3, end: 3 }),
+    this.anims.create({
+      key: "kylie-left",
+      frames: this.anims.generateFrameNames("kylie", { start: 3, end: 5 }),
       frameRate: 10,
       repeat: -1
     });
-    anims.create({
-      key: "right2",
-      frames: anims.generateFrameNames("player2", { start: 6, end: 6 }),
+    this.anims.create({
+      key: "kylie-right",
+      frames: this.anims.generateFrameNames("kylie", { start: 6, end: 8 }),
       frameRate: 10,
       repeat: -1
     });
-    anims.create({
-      key: "front2",
-      frames: anims.generateFrameNames("player2", { start: 0, end: 0 }),
+    this.anims.create({
+      key: "kylie-front",
+      frames: this.anims.generateFrameNames("kylie", { start: 0, end: 2 }),
       frameRate: 10,
       repeat: -1
     });
-    anims.create({
-      key: "back2",
-      frames: anims.generateFrameNames("player2", { start: 9, end: 9 }),
+    this.anims.create({
+      key: "kylie-back",
+      frames: this.anims.generateFrameNames("kylie", { start: 9, end: 11 }),
       frameRate: 10,
       repeat: -1
     });
-
-    //setting the camera to follow player
 
     const camera = this.cameras.main;
     camera.startFollow(this.player);
     camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
-    /* colliding with */
-    // const debug = this.add.graphics().setAlpha(0.75);
-    // worldLayer.renderDebug(debug, {
-    //   tileColor: null,
-    //   collidingTileColor: new Phaser.Display.Color(180, 50, 250, 255),
-    //   faceColor: new Phaser.Display.Color(40, 39, 37, 255)
-    // });
     this.cursors = this.input.keyboard.createCursorKeys();
   }
 
   update() {
-    const prevVelocity = this.player.body.velocity.clone();
-
     this.player.body.setVelocity(0);
 
     if (this.cursors.left.isDown) {
       this.player.body.setVelocityX(-250);
+      this.player.anims.play("kylie-left", true);
     } else if (this.cursors.right.isDown) {
       this.player.body.setVelocityX(250);
+      this.player.anims.play("kylie-right", true);
     } else if (this.cursors.up.isDown) {
       this.player.body.setVelocityY(-250);
+      this.player.anims.play("kylie-back", true);
     } else if (this.cursors.down.isDown) {
       this.player.body.setVelocityY(250);
-    }
-
-    if (this.cursors.left.isDown) {
-      this.player.anims.play("left2", true);
-    } else if (this.cursors.right.isDown) {
-      this.player.anims.play("right2", true);
-    } else if (this.cursors.up.isDown) {
-      this.player.anims.play("back2", true);
-    } else if (this.cursors.down.isDown) {
-      this.player.anims.play("front2", true);
+      this.player.anims.play("kylie-front", true);
     } else {
       this.player.anims.stop();
-
-      if (prevVelocity.x < 0) this.player.setTexture("player2", "left2");
-      else if (prevVelocity.x > 0) this.player.setTexture("player2", "right2");
-      else if (prevVelocity.y < 0) this.player.setTexture("player2", "back2");
-      else if (prevVelocity.y > 0) this.player.setTexture("player2", "front2");
     }
   }
 
-  hitEnemy(player, enemiesGroup) {
+  hitEnemy() {
     this.scene.restart();
   }
 
   victory() {
-    this.scene.start("Victory");
+    this.scene.stop("Level2");
+    this.scene.start("TheEnd");
   }
 }
 

@@ -70,7 +70,7 @@
     {
       "draworder": "topdown",
       "id": 10,
-      "name": "Player",
+      "name": "player",
       "objects": [
         {
           "height": 0,

@@ -1,13 +1,13 @@
 import { getAsset } from "./utils";
 
-class LandingScene extends Phaser.Scene {
+class Landing extends Phaser.Scene {
   constructor() {
-    super({ key: "LandingScene" });
+    super({ key: "Landing" });
   }
 
   preload() {
     this.load.image("landing", getAsset("landing.png"));
-    this.load.image("play", getAsset("player.png"));
+    this.load.image("play", getAsset("play.png"));
   }
 
   create() {
@@ -22,4 +22,4 @@ class LandingScene extends Phaser.Scene {
   }
 }
 
-export default LandingScene;
+export default Landing;
